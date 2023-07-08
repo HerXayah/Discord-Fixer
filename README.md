@@ -13,7 +13,7 @@ If you are a developer or interested, pass -debug as an argument to the exe to s
 
 - [ ] Autolaunch on Discord startup
 - [X] Make it work on Canary and PTB
-- [ ] create Debug mode
+- [X] create Debug mode
 
 ## Credits
 
