@@ -1,5 +1,8 @@
 # Discord-Fixer
 Disabled the Global Hotkey Process to save Deltas (get you nyoooooming)
+Means you cant use any Hotkeys tho, so be wary.
+
+[Research Part by AMIT](https://twitter.com/amitxv/status/1636094504905179138)
 
 ## Usage
 
