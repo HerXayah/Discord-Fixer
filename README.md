@@ -4,8 +4,8 @@ Disabled the Global Hotkey Process to save Deltas (get you nyoooooming)
 ## Usage
 
 1. Download the latest release from [here](
-2. Open the .exe
-3. Proft
+2. Open the .exe everytime you restart Discord
+3. Profit
 
 If you are a developer or interested, pass -debug as an argument to the exe to see the debug console.
 
