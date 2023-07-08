@@ -5,7 +5,6 @@ Disabled the Global Hotkey Process to save Deltas (get you nyoooooming)
 ## Todo?
 
 - [ ] Autolaunch on Discord startup
-- [ ] 
 
 ## Credits
 
