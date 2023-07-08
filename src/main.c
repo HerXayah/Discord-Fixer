@@ -53,7 +53,7 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, INT n
                 CloseHandle(hThread);
             } while (Thread32Next(hThreadSnapshot, &te));
         }
-        printf("\n");
+        printf("Done!\n");
         CloseHandle(hThreadSnapshot);
         CloseHandle(hProcess);
     }
