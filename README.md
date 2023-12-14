@@ -6,8 +6,9 @@ Disables threads responsible for calling GetRawInputData for Discord, Discord PT
 ## Usage
 
 1. Download the latest release.
-2. Locate the directory in which `Discord.exe`, `DiscordPTB.exe` and `DiscordCanary.exe` is located and place the executable in it.
-3. Launch the executable, this will also launch the relevant executable for Discord.
+2. Locate the correct Directory for your Discord Client.
+3. Copy the executable to the folder where the Update.exe is located.
+4. Launch the executable, this will also launch the relevant executable for Discord.
 
 ### How does it work?
 1. The program attempts to locate a valid `Discord.exe`, `DiscordPTB.exe` and `DiscordCanary.exe` file.
