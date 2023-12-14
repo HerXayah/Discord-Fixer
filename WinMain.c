@@ -34,6 +34,9 @@ void SuspendDiscordThread(const wchar_t* discordPath) {
 
     ShellExecuteW(NULL, NULL, discordPath, NULL, NULL, SW_SHOWNORMAL);
 
+    // Wait for Discord to start for 30 seconds
+    Sleep(8000);
+
     while (!bSuspended && !SleepEx(1, TRUE)) {
         WTSEnumerateProcessesW(WTS_CURRENT_SERVER, 0, 1, &pProcessInfo, &dwCount);
 
