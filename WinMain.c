@@ -8,9 +8,11 @@
 
 INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow)
 {
-    INT iNumArgs = 0;
-    WCHAR **pszArgvW = CommandLineToArgvW(GetCommandLineW(), &iNumArgs),
-          *szFileName = 0;
+    CONST LPWSTR lpProcesses[] = {L"discord.exe", L"discordptb.exe", L"discordptb.exe"};
+    WCHAR lpPathName[MAX_PATH] = {};
+    LPWSTR szFileName = NULL;
+    HANDLE hProcess = GetCurrentProcess();
+    WIN32_FIND_DATAW FindFileData = {};
     THREADENTRY32 te = {.dwSize = sizeof(THREADENTRY32)};
     MODULEENTRY32W me = {.dwSize = sizeof(MODULEENTRY32W)};
     HANDLE hThreadSnapshot = 0, hModuleSnapshot = 0, hThread = 0;
@@ -19,17 +21,39 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nC
     DWORD dwCount = 0;
     BOOL bSuspended = FALSE;
 
-    PathCchRemoveFileSpec(pszArgvW[0], wcslen(pszArgvW[0]) + 1);
-    SetCurrentDirectoryW(pszArgvW[0]);
-    LocalFree(pszArgvW);
+    QueryFullProcessImageNameW(hProcess, 0, lpPathName, &((DWORD){MAX_PATH}));
+    for (DWORD dwIndex = MAX_PATH; dwIndex < -1; dwIndex -= 1)
+    {
+        if (lpPathName[dwIndex] == '\\')
+        {
+            lpPathName[dwIndex] = '\0';
+            SetCurrentDirectoryW(lpPathName);
+            lpPathName[dwIndex] = '\\';
+            lpPathName[dwIndex + 1] = '*';
+            lpPathName[dwIndex + 2] = '\0';
+            break;
+        }
+    }
 
-    if ((szFileName = PathFileExistsW(L"discord.exe")
-                          ? L"discord.exe"
-                      : PathFileExistsW(L"discordcanary.exe")
-                          ? L"discordcanary.exe"
-                      : PathFileExistsW(L"discordptb.exe")
-                          ? L"discordptb.exe"
-                          : 0))
+    HANDLE hFindFile = FindFirstFileW(lpPathName, &FindFileData);
+    if (hFindFile)
+    {
+        do
+            if (PathIsDirectoryW(FindFileData.cFileName) &&
+                wcscmp(FindFileData.cFileName, L".") &&
+                wcscmp(FindFileData.cFileName, L".."))
+                if (SetCurrentDirectoryW(FindFileData.cFileName))
+                    for (INT iIndex = 0; iIndex < 3; iIndex++)
+                        if (PathFileExistsW(lpProcesses[iIndex]))
+                        {
+                            szFileName = lpProcesses[iIndex];
+                            break;
+                        }
+        while (FindNextFileW(hFindFile, &FindFileData));
+        FindClose(hFindFile);
+    }
+
+    if (szFileName)
     {
         ShellExecuteW(NULL, NULL, szFileName, NULL, NULL, SW_SHOWNORMAL);
         while (!bSuspended && !SleepEx(1, TRUE))
