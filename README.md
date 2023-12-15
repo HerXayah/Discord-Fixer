@@ -12,8 +12,8 @@ Disables threads responsible for calling GetRawInputData for Discord, Discord PT
 ### How does it work?
 1. The program attempts to locate a valid `Discord.exe`, `DiscordPTB.exe` and `DiscordCanary.exe` file.
 2. Once the correct file was located, the located file will be launched.
-3. The program will be iterate through the process list until it finds any threads that use the following module: `discord_utils.node`.
-4. Once found, the relevant threads will be suspended.
+3. Using [WinEvent](https://learn.microsoft.com/en-us/windows/win32/winauto/what-are-winevents) [Hooks](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwineventhook), the process waits until a window with the class name of `raw_input` is created.
+4. The process that is hosting the `raw_input` window will have its threads iterated and if any thread is using `discord_utils.node`, it will be suspended.
 
 # Building
 1. Install the latest version of [`GCC`](https://winlibs.com/) and [`UPX`](https://upx.github.io/) for optional compression.
