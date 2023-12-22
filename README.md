@@ -6,7 +6,7 @@ Disables threads responsible for calling GetRawInputData for Discord, Discord PT
 ## Usage
 
 1. Download the latest [Release](https://github.com/PrincessAkira/Discord-Fixer/releases).
-2. Locate where Discord Stable/PTB/Canary is installed and place this executable.
+2. Locate where Discord Stable/PTB/Canary is installed (Folder with `Update.exe`) and place this executable.
 3. Launch the downloaded executable, this will also launch the relevant executable for Discord.
 
 ### How does it work?
