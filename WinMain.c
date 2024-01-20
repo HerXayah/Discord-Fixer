@@ -2,26 +2,20 @@
 #include <shlwapi.h>
 #include <tlhelp32.h>
 #include <winternl.h>
-#include <wtsapi32.h>
 
 static LPWSTR szFileName = NULL;
 
-void WinEventProc(HWINEVENTHOOK hWinEventHook,
-                  DWORD event,
-                  HWND hwnd,
-                  LONG idObject,
-                  LONG idChild,
-                  DWORD idEventThread,
+void WinEventProc(HWINEVENTHOOK hWinEventHook, DWORD event, HWND hwnd, LONG idObject, LONG idChild, DWORD idEventThread,
                   DWORD dwmsEventTime)
 {
     WCHAR lpExeName[MAX_PATH] = {};
     DWORD dwProcessId = 0;
-    DWORD dwThreadId = GetWindowThreadProcessId(hwnd, &dwProcessId);
     WCHAR ptszClassName[256] = {};
     HANDLE hThreadSnapshot = NULL;
     THREADENTRY32 te = {.dwSize = sizeof(THREADENTRY32)};
 
     RealGetWindowClassW(hwnd, ptszClassName, 256);
+    GetWindowThreadProcessId(hwnd, &dwProcessId);
     HANDLE hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, dwProcessId);
     QueryFullProcessImageNameW(hProcess, 0, lpExeName, &((DWORD){MAX_PATH}));
     PathStripPathW(_wcslwr(lpExeName));
@@ -39,8 +33,11 @@ void WinEventProc(HWINEVENTHOOK hWinEventHook,
                 MODULEENTRY32W me = {.dwSize = sizeof(MODULEENTRY32W)};
                 HANDLE hThread = OpenThread(THREAD_ALL_ACCESS, FALSE, te.th32ThreadID),
                        hModuleSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE, dwProcessId);
-                NtQueryInformationThread(hThread, ThreadQuerySetWin32StartAddress, &ThreadInformation, sizeof(DWORD64), NULL);
-                if (Module32FirstW((hModuleSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE, dwProcessId)), &me))
+                NtQueryInformationThread(hThread, ThreadQuerySetWin32StartAddress, &ThreadInformation, sizeof(DWORD64),
+                                         NULL);
+                if (Module32FirstW((hModuleSnapshot =
+                                        CreateToolhelp32Snapshot(TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE, dwProcessId)),
+                                   &me))
                     do
                     {
                         if (ThreadInformation >= (DWORD64)me.modBaseAddr &&
@@ -73,12 +70,10 @@ BOOL EnumWindowsProc(HWND hWnd, LPARAM lParam)
 
 INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow)
 {
-    CONST LPWSTR lpProcesses[] = {L"discord.exe", L"discordptb.exe", L"discordptb.exe"};
+    CONST LPWSTR aProcesses[] = {L"discord.exe", L"discordptb.exe", L"discordcanary.exe"};
     WCHAR lpPathName[MAX_PATH] = {};
     HANDLE hProcess = GetCurrentProcess();
     WIN32_FIND_DATAW FindFileData = {};
-    PWTS_PROCESS_INFOW pProcessInfo = NULL;
-    DWORD Count = 0;
 
     QueryFullProcessImageNameW(hProcess, 0, lpPathName, &((DWORD){MAX_PATH}));
     for (DWORD dwIndex = MAX_PATH; dwIndex < -1; dwIndex -= 1)
@@ -94,31 +89,21 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nC
         }
     }
 
-    HANDLE hFindFile = FindFirstFileExW(lpPathName,
-                                        FindExInfoBasic,
-                                        &FindFileData,
-                                        FindExSearchLimitToDirectories,
-                                        NULL,
-                                        FIND_FIRST_EX_LARGE_FETCH);
+    HANDLE hFindFile = FindFirstFileExW(lpPathName, FindExInfoBasic, &FindFileData, FindExSearchLimitToDirectories,
+                                        NULL, FIND_FIRST_EX_LARGE_FETCH);
     if (hFindFile)
     {
         do
-            if (PathIsDirectoryW(FindFileData.cFileName) &&
-                wcscmp(FindFileData.cFileName, L".") &&
+            if (PathIsDirectoryW(FindFileData.cFileName) && wcscmp(FindFileData.cFileName, L".") &&
                 wcscmp(FindFileData.cFileName, L".."))
                 if (SetCurrentDirectoryW(FindFileData.cFileName))
                     for (INT iIndex = 0; iIndex < 3; iIndex++)
-                        if (PathFileExistsW(lpProcesses[iIndex]))
+                        if (PathFileExistsW(aProcesses[iIndex]))
                         {
-                            szFileName = lpProcesses[iIndex];
+                            szFileName = aProcesses[iIndex];
                             EnumWindows(EnumWindowsProc, 0);
                             ShellExecuteW(NULL, NULL, szFileName, NULL, NULL, SW_SHOWNORMAL);
-                            SetWinEventHook(EVENT_OBJECT_CREATE,
-                                            EVENT_OBJECT_CREATE,
-                                            NULL,
-                                            WinEventProc,
-                                            0,
-                                            0,
+                            SetWinEventHook(EVENT_OBJECT_CREATE, EVENT_OBJECT_CREATE, NULL, WinEventProc, 0, 0,
                                             WINEVENT_OUTOFCONTEXT);
                             while (GetMessageW(&((MSG){}), NULL, 0, 0))
                                 ;
