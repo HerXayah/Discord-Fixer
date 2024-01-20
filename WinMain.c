@@ -3,7 +3,6 @@
 #include <tlhelp32.h>
 #include <winternl.h>
 #include <wtsapi32.h>
-
 static LPWSTR szFileName = NULL;
 
 void WinEventProc(HWINEVENTHOOK hWinEventHook,
@@ -16,7 +15,7 @@ void WinEventProc(HWINEVENTHOOK hWinEventHook,
 {
     WCHAR lpExeName[MAX_PATH] = {};
     DWORD dwProcessId = 0;
-    DWORD dwThreadId = GetWindowThreadProcessId(hwnd, &dwProcessId);
+    //DWORD dwThreadId = GetWindowThreadProcessId(hwnd, &dwProcessId);
     WCHAR ptszClassName[256] = {};
     HANDLE hThreadSnapshot = NULL;
     THREADENTRY32 te = {.dwSize = sizeof(THREADENTRY32)};
@@ -73,12 +72,12 @@ BOOL EnumWindowsProc(HWND hWnd, LPARAM lParam)
 
 INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow)
 {
-    CONST LPWSTR lpProcesses[] = {L"discord.exe", L"discordptb.exe", L"discordptb.exe"};
+    CONST LPWSTR lpProcesses[] = {L"discord.exe", L"discordptb.exe"};
     WCHAR lpPathName[MAX_PATH] = {};
     HANDLE hProcess = GetCurrentProcess();
     WIN32_FIND_DATAW FindFileData = {};
-    PWTS_PROCESS_INFOW pProcessInfo = NULL;
-    DWORD Count = 0;
+    //PWTS_PROCESS_INFOW pProcessInfo = NULL;
+    //DWORD Count = 0;
 
     QueryFullProcessImageNameW(hProcess, 0, lpPathName, &((DWORD){MAX_PATH}));
     for (DWORD dwIndex = MAX_PATH; dwIndex < -1; dwIndex -= 1)
@@ -107,7 +106,7 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nC
                 wcscmp(FindFileData.cFileName, L".") &&
                 wcscmp(FindFileData.cFileName, L".."))
                 if (SetCurrentDirectoryW(FindFileData.cFileName))
-                    for (INT iIndex = 0; iIndex < 3; iIndex++)
+                    for (INT iIndex = 0; iIndex < (sizeof(lpProcesses)/sizeof(*lpProcesses)); iIndex++)
                         if (PathFileExistsW(lpProcesses[iIndex]))
                         {
                             szFileName = lpProcesses[iIndex];
@@ -120,8 +119,7 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nC
                                             0,
                                             0,
                                             WINEVENT_OUTOFCONTEXT);
-                            while (GetMessageW(&((MSG){}), NULL, 0, 0))
-                                ;
+                            while (GetMessageW(&((MSG){}), NULL, 0, 0));
                             break;
                         }
         while (FindNextFileW(hFindFile, &FindFileData));
