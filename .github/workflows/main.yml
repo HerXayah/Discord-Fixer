@@ -8,11 +8,10 @@ on:
 
 jobs:
   build:
-    permissions:
-      id-token: write
-      contents: write
-      runs-on: windows-2022
-
+      runs-on: windows-late  st
+      permissions:
+        id-token: write
+        contents: write
       steps:
       -
         name: Checkout
