@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+      runs-on: windows-latest
+
+      steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Install UPX
+        uses: crazy-max/ghaction-upx@v3
+        with:
+          install-only: true
+      -
+        name: UPX version
+        run: upx --version
+      - name: Set up GCC
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          version: latest
+          platform: x64
+      - name: Run Build
+        run: |
+          build.bat
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DiscordFixer.exe
+          path: /DiscordFixer.exe
