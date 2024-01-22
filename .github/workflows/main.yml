@@ -47,10 +47,10 @@ jobs:
         with:
           artifacts: "D:/a/DiscordFixer/DiscordFixer/DiscordFixer.exe"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: prerelease
-          name: KBotExt-${{ env.SHORT_SHA }}
+          tag: Beta
+          name: DiscordFixer-${{ env.SHORT_SHA }}
           allowUpdates: true
           generateReleaseNotes: true
           makeLatest: true
-          prerelease: true
+          prerelease: false
           updateOnlyUnreleased: true # Only update the latest release if it is not marked as released. Set it to true if needed.
