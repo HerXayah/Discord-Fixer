@@ -35,11 +35,6 @@ jobs:
         with:
           name: DiscordFixer.exe
           path: DiscordFixer.exe
-
-      - name: Tag Repo
-        uses: richardsimko/update-tag@v1
-        with:
-          tag_name: Beta
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Release
