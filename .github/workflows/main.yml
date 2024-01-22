@@ -38,13 +38,19 @@ jobs:
           path: DiscordFixer.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Tag Repo
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: Beta
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Release
         uses: ncipollo/release-action@v1.12.0
         with:
           artifacts: "D:/a/DiscordFixer/DiscordFixer/DiscordFixer.exe"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: Beta
-          name: DiscordFixer-${{ env.SHORT_SHA }}
+          name: DiscordFixer
           allowUpdates: true
           generateReleaseNotes: true
           makeLatest: true
