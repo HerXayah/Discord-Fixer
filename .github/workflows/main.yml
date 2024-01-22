@@ -48,4 +48,3 @@ jobs:
           generateReleaseNotes: true
           makeLatest: true
           prerelease: false
-          updateOnlyUnreleased: true # Only update the latest release if it is not marked as released. Set it to true if needed.
