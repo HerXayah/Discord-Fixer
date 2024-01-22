@@ -35,3 +35,22 @@ jobs:
         with:
           name: DiscordFixer.exe
           path: DiscordFixer.exe
+
+      - name: Tag Repo
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: Beta
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release
+        uses: ncipollo/release-action@v1.12.0
+        with:
+          artifacts: "D:/a/DiscordFixer/DiscordFixer/DiscordFixer.exe"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: prerelease
+          name: KBotExt-${{ env.SHORT_SHA }}
+          allowUpdates: true
+          generateReleaseNotes: true
+          makeLatest: true
+          prerelease: true
+          updateOnlyUnreleased: true # Only update the latest release if it is not marked as released. Set it to true if needed.
