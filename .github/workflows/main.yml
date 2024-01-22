@@ -8,8 +8,10 @@ on:
 
 jobs:
   build:
-
-      runs-on: windows-latest
+    permissions:
+      id-token: write
+      contents: write
+      runs-on: windows-2022
 
       steps:
       -
