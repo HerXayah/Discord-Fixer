@@ -47,7 +47,7 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1.12.0
         with:
-          artifacts: "D:/a/DiscordFixer/DiscordFixer/DiscordFixer.exe"
+          artifacts: DiscordFixer.exe
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: Beta
           name: DiscordFixer
