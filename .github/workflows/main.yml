@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-      runs-on: windows-late  st
+      runs-on: windows-latest
       permissions:
         id-token: write
         contents: write
