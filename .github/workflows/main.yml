@@ -30,7 +30,7 @@ jobs:
           platform: x64
       - name: Run Build
         run: |
-          build.bat
+          cmd.exe build.bat
       - uses: actions/upload-artifact@v4
         with:
           name: DiscordFixer.exe
