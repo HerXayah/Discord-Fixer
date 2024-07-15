@@ -16,6 +16,8 @@ Disables threads responsible for calling GetRawInputData for Discord, Discord PT
 3. Using [WinEvent](https://learn.microsoft.com/en-us/windows/win32/winauto/what-are-winevents) [Hooks](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwineventhook), the process waits until a window with the class name of `raw_input` is created.
 4. The process that is hosting the `raw_input` window will have its threads iterated and if any thread is using `discord_utils.node`, it will be suspended.
 
+![alt text](image.png)
+
 # Building
 1. Install the latest version of [`GCC`](https://winlibs.com/) and [`UPX`](https://upx.github.io/) for optional compression.
 2. Run `build.bat`.
