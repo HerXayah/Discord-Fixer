@@ -23,13 +23,11 @@ if errorlevel 1 (
 )
 
 rem Compress executable with UPX
-if defined UPX (
-    echo Compressing executable with UPX...
-    upx --best --ultra-brute "%OUTPUT_FILE%" >nul 2>&1
-    if errorlevel 1 (
-        echo UPX compression failed
-        exit /b 1
-    )
+echo Compressing executable with UPX...
+upx --best --ultra-brute "%OUTPUT_FILE%" >nul 2>&1
+if errorlevel 1 (
+    echo UPX compression failed
+    exit /b 1
 )
 
 echo Build finished successfully.
